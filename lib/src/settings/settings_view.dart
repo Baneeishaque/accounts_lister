@@ -9,7 +9,7 @@ import 'settings_controller.dart';
 class SettingsView extends StatelessWidget {
   const SettingsView({Key? key, required this.controller}) : super(key: key);
 
-  static const routeName = '/settings';
+  static const routeName = '/settings_view';
 
   final SettingsController controller;
 
