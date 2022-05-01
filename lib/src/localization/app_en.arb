@@ -1,0 +1,6 @@
+{
+  "appTitle": "accounts_lister",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}
