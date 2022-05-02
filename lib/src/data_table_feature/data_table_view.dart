@@ -44,11 +44,14 @@ class _DataTableViewState extends State<DataTableView> {
                       decoration: const InputDecoration(labelText: 'By index'),
                       onSubmitted: (indexSearchKey) {
                         if (indexSearchKey.isEmpty) {
-                          // TODO : No index key toast
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text('No Index...'),
+                          ));
                         } else {
                           int? parseResult = int.tryParse(indexSearchKey);
                           if (parseResult == null) {
-                            // TODO : Invalid Index key toast
+                            showInvalidIndexSnackBar(context);
                           } else {
                             if (_searchByValueController.text.isEmpty) {
                               //Index Search
@@ -74,7 +77,10 @@ class _DataTableViewState extends State<DataTableView> {
                       decoration: const InputDecoration(labelText: 'By value'),
                       onSubmitted: (valueSearchKey) {
                         if (valueSearchKey.isEmpty) {
-                          // TODO : No search key toast
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text('No Value...'),
+                          ));
                         } else {
                           if (_searchByIndexController.text.isEmpty) {
                             //Value Search
@@ -84,7 +90,7 @@ class _DataTableViewState extends State<DataTableView> {
                             int? parseResult =
                                 int.tryParse(_searchByIndexController.text);
                             if (parseResult == null) {
-                              // TODO : Invalid Index key toast
+                              showInvalidIndexSnackBar(context);
                             } else {
                               _source.filterData(
                                   indexSearchKey: parseResult,
@@ -108,7 +114,10 @@ class _DataTableViewState extends State<DataTableView> {
                     onPressed: () {
                       if (_searchByIndexController.text.isEmpty) {
                         if (_searchByValueController.text.isEmpty) {
-                          // TODO : No search key toast
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text('No Search Key...'),
+                          ));
                         } else {
                           //Value Search
                           _source.filterData(
@@ -118,7 +127,7 @@ class _DataTableViewState extends State<DataTableView> {
                         int? parseResult =
                             int.tryParse(_searchByIndexController.text);
                         if (parseResult == null) {
-                          // TODO : Invalid Index key toast
+                          showInvalidIndexSnackBar(context);
                         } else {
                           if (_searchByValueController.text.isEmpty) {
                             //Index Search
@@ -178,6 +187,12 @@ class _DataTableViewState extends State<DataTableView> {
       //   ),
       // ),
     );
+  }
+
+  void showInvalidIndexSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Invalid Index...'),
+    ));
   }
 
   @override
