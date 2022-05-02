@@ -36,17 +36,18 @@ class ExampleSource extends AdvancedDataTableSource<RowData> {
         //Index Search
         return loadFilteredData(
             data
-                .where((rowData) => rowData.index == lastIndexSearchKey)
+                .where(
+                    (rowData) => canIncludeOnFilteredDataBasedOnIndex(rowData))
                 .toList(),
             pageRequest);
       } else {
         //Index & Value Search
         return loadFilteredData(
             data
-                .where((rowData) => rowData.index == lastIndexSearchKey)
-                .where((rowData) => rowData.value
-                    .toLowerCase()
-                    .contains(lastValueSearchKey.toLowerCase()))
+                .where(
+                    (rowData) => canIncludeOnFilteredDataBasedOnIndex(rowData))
+                .where(
+                    (rowData) => canIncludeOnFilteredDataBasedOnValue(rowData))
                 .toList(),
             pageRequest);
       }
@@ -58,14 +59,22 @@ class ExampleSource extends AdvancedDataTableSource<RowData> {
         //Value Search
         return loadFilteredData(
             data
-                .where((rowData) => rowData.value
-                    .toLowerCase()
-                    .contains(lastValueSearchKey.toLowerCase()))
+                .where(
+                    (rowData) => canIncludeOnFilteredDataBasedOnValue(rowData))
                 .toList(),
             pageRequest);
       }
     }
   }
+
+  bool canIncludeOnFilteredDataBasedOnValue(RowData rowData) {
+    return rowData.value
+        .toLowerCase()
+        .contains(lastValueSearchKey.toLowerCase());
+  }
+
+  bool canIncludeOnFilteredDataBasedOnIndex(RowData rowData) =>
+      rowData.index.toString().contains(lastIndexSearchKey.toString());
 
   RemoteDataSourceDetails<RowData> loadFilteredData(
       List<RowData> filteredData, NextPageRequest pageRequest) {
