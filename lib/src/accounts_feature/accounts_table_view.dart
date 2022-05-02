@@ -32,7 +32,11 @@ class _AccountsTableViewState extends State<AccountsTableView> {
           IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
-                // TODO : Refresh Data
+                setState(() {
+                  _searchByValueController.text = '';
+                  _searchByIndexController.text = '';
+                  futureAccountsFullResponse = fetchAccountsFullResponse();
+                });
               }),
         ],
       ),
@@ -40,6 +44,9 @@ class _AccountsTableViewState extends State<AccountsTableView> {
         child: FutureBuilder<AccountsFullResponse>(
             future: futureAccountsFullResponse,
             builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const CircularProgressIndicator();
+              }
               if (snapshot.hasData) {
                 if (snapshot.data!.status == 0) {
                   _source.data = snapshot.data!.accounts;
@@ -195,8 +202,9 @@ class _AccountsTableViewState extends State<AccountsTableView> {
                 }
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
+              } else {
+                return const Text('No Data, No Error...');
               }
-              return const CircularProgressIndicator();
             }),
       ),
     );
