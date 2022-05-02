@@ -12,8 +12,9 @@ class DataTableView extends StatefulWidget {
 }
 
 class _DataTableViewState extends State<DataTableView> {
-  var rowsPerPage = AdvancedPaginatedDataTable.defaultRowsPerPage;
-  final source = ExampleSource();
+  var _rowsPerPage = AdvancedPaginatedDataTable.defaultRowsPerPage;
+  final _source = ExampleSource();
+  final _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,25 +30,96 @@ class _DataTableViewState extends State<DataTableView> {
         ],
       ),
       body: SingleChildScrollView(
-        child: AdvancedPaginatedDataTable(
-          addEmptyRows: false,
-          source: source,
-          showFirstLastButtons: true,
-          rowsPerPage: rowsPerPage,
-          availableRowsPerPage: const [1, 5, 10, 50],
-          onRowsPerPageChanged: (newRowsPerPage) {
-            if (newRowsPerPage != null) {
-              setState(() {
-                rowsPerPage = newRowsPerPage;
-              });
-            }
-          },
-          columns: const [
-            DataColumn(label: Text('Row no')),
-            DataColumn(label: Text('Value'))
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration:
+                          const InputDecoration(labelText: 'Search by value'),
+                      onSubmitted: (valueSearchKey) {
+                        if (valueSearchKey.isNotEmpty) {
+                          _source.filterByValue(valueSearchKey: valueSearchKey);
+                        } else {
+                          // TODO : No search key toast
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _searchController.text = '';
+                      });
+                      _source.filterByValue(passedIsClearAction: true);
+                    },
+                    icon: const Icon(Icons.clear)),
+                IconButton(
+                    onPressed: () {
+                      if (_searchController.text.isNotEmpty) {
+                        _source.filterByValue(
+                            valueSearchKey: _searchController.text);
+                      } else {
+                        // TODO : No search key toast
+                      }
+                    },
+                    icon: const Icon(Icons.search)),
+              ],
+            ),
+            AdvancedPaginatedDataTable(
+              addEmptyRows: false,
+              source: _source,
+              showFirstLastButtons: true,
+              rowsPerPage: _rowsPerPage,
+              availableRowsPerPage: const [1, 5, 10, 50],
+              onRowsPerPageChanged: (newRowsPerPage) {
+                if (newRowsPerPage != null) {
+                  setState(() {
+                    _rowsPerPage = newRowsPerPage;
+                  });
+                }
+              },
+              columns: const [
+                DataColumn(label: Text('Row no')),
+                DataColumn(label: Text('Value'))
+              ],
+            ),
           ],
         ),
       ),
+
+      // SingleChildScrollView(
+      //   child: AdvancedPaginatedDataTable(
+      //     addEmptyRows: false,
+      //     source: source,
+      //     showFirstLastButtons: true,
+      //     rowsPerPage: rowsPerPage,
+      //     availableRowsPerPage: const [1, 5, 10, 50],
+      //     onRowsPerPageChanged: (newRowsPerPage) {
+      //       if (newRowsPerPage != null) {
+      //         setState(() {
+      //           rowsPerPage = newRowsPerPage;
+      //         });
+      //       }
+      //     },
+      //     columns: const [
+      //       DataColumn(label: Text('Row no')),
+      //       DataColumn(label: Text('Value'))
+      //     ],
+      //   ),
+      // ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.text = '';
   }
 }
