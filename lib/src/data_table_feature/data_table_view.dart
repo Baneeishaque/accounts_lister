@@ -14,7 +14,8 @@ class DataTableView extends StatefulWidget {
 class _DataTableViewState extends State<DataTableView> {
   var _rowsPerPage = AdvancedPaginatedDataTable.defaultRowsPerPage;
   final _source = ExampleSource();
-  final _searchController = TextEditingController();
+  final _searchByValueController = TextEditingController();
+  final _searchByIndexController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +40,57 @@ class _DataTableViewState extends State<DataTableView> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: TextField(
-                      controller: _searchController,
-                      decoration:
-                          const InputDecoration(labelText: 'Search by value'),
-                      onSubmitted: (valueSearchKey) {
-                        if (valueSearchKey.isNotEmpty) {
-                          _source.filterByValue(valueSearchKey: valueSearchKey);
+                      controller: _searchByIndexController,
+                      decoration: const InputDecoration(labelText: 'By index'),
+                      onSubmitted: (indexSearchKey) {
+                        if (indexSearchKey.isEmpty) {
+                          // TODO : No index key toast
                         } else {
+                          int? parseResult = int.tryParse(indexSearchKey);
+                          if (parseResult == null) {
+                            // TODO : Invalid Index key toast
+                          } else {
+                            if (_searchByValueController.text.isEmpty) {
+                              //Index Search
+                              _source.filterData(indexSearchKey: parseResult);
+                            } else {
+                              //Index & Value Search
+                              _source.filterData(
+                                  indexSearchKey: parseResult,
+                                  valueSearchKey:
+                                      _searchByValueController.text);
+                            }
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: TextField(
+                      controller: _searchByValueController,
+                      decoration: const InputDecoration(labelText: 'By value'),
+                      onSubmitted: (valueSearchKey) {
+                        if (valueSearchKey.isEmpty) {
                           // TODO : No search key toast
+                        } else {
+                          if (_searchByIndexController.text.isEmpty) {
+                            //Value Search
+                            _source.filterData(valueSearchKey: valueSearchKey);
+                          } else {
+                            //Index & Value Search
+                            int? parseResult =
+                                int.tryParse(_searchByIndexController.text);
+                            if (parseResult == null) {
+                              // TODO : Invalid Index key toast
+                            } else {
+                              _source.filterData(
+                                  indexSearchKey: parseResult,
+                                  valueSearchKey: valueSearchKey);
+                            }
+                          }
                         }
                       },
                     ),
@@ -55,18 +99,37 @@ class _DataTableViewState extends State<DataTableView> {
                 IconButton(
                     onPressed: () {
                       setState(() {
-                        _searchController.text = '';
+                        _searchByValueController.text = '';
                       });
-                      _source.filterByValue(passedIsClearAction: true);
+                      _source.filterData(isClearAction: true);
                     },
                     icon: const Icon(Icons.clear)),
                 IconButton(
                     onPressed: () {
-                      if (_searchController.text.isNotEmpty) {
-                        _source.filterByValue(
-                            valueSearchKey: _searchController.text);
+                      if (_searchByIndexController.text.isEmpty) {
+                        if (_searchByValueController.text.isEmpty) {
+                          // TODO : No search key toast
+                        } else {
+                          //Value Search
+                          _source.filterData(
+                              valueSearchKey: _searchByValueController.text);
+                        }
                       } else {
-                        // TODO : No search key toast
+                        int? parseResult =
+                            int.tryParse(_searchByIndexController.text);
+                        if (parseResult == null) {
+                          // TODO : Invalid Index key toast
+                        } else {
+                          if (_searchByValueController.text.isEmpty) {
+                            //Index Search
+                            _source.filterData(indexSearchKey: parseResult);
+                          } else {
+                            //Index &Value Search
+                            _source.filterData(
+                                indexSearchKey: parseResult,
+                                valueSearchKey: _searchByValueController.text);
+                          }
+                        }
                       }
                     },
                     icon: const Icon(Icons.search)),
@@ -86,7 +149,7 @@ class _DataTableViewState extends State<DataTableView> {
                 }
               },
               columns: const [
-                DataColumn(label: Text('Row no')),
+                DataColumn(label: Text('Row No.')),
                 DataColumn(label: Text('Value'))
               ],
             ),
@@ -120,6 +183,7 @@ class _DataTableViewState extends State<DataTableView> {
   @override
   void initState() {
     super.initState();
-    _searchController.text = '';
+    _searchByValueController.text = '';
+    _searchByIndexController.text = '';
   }
 }
