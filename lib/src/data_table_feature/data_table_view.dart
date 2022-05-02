@@ -5,7 +5,7 @@ import 'package:accounts_lister/src/data_table_feature/example_source.dart';
 class DataTableView extends StatefulWidget {
   const DataTableView({Key? key}) : super(key: key);
 
-  static const routName = '/';
+  static const routName = '/data_table_view';
 
   @override
   State<DataTableView> createState() => _DataTableViewState();
@@ -133,7 +133,7 @@ class _DataTableViewState extends State<DataTableView> {
                             //Index Search
                             _source.filterData(indexSearchKey: parseResult);
                           } else {
-                            //Index &Value Search
+                            //Index & Value Search
                             _source.filterData(
                                 indexSearchKey: parseResult,
                                 valueSearchKey: _searchByValueController.text);
@@ -165,34 +165,7 @@ class _DataTableViewState extends State<DataTableView> {
           ],
         ),
       ),
-
-      // SingleChildScrollView(
-      //   child: AdvancedPaginatedDataTable(
-      //     addEmptyRows: false,
-      //     source: source,
-      //     showFirstLastButtons: true,
-      //     rowsPerPage: rowsPerPage,
-      //     availableRowsPerPage: const [1, 5, 10, 50],
-      //     onRowsPerPageChanged: (newRowsPerPage) {
-      //       if (newRowsPerPage != null) {
-      //         setState(() {
-      //           rowsPerPage = newRowsPerPage;
-      //         });
-      //       }
-      //     },
-      //     columns: const [
-      //       DataColumn(label: Text('Row no')),
-      //       DataColumn(label: Text('Value'))
-      //     ],
-      //   ),
-      // ),
     );
-  }
-
-  void showInvalidIndexSnackBar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Invalid Index...'),
-    ));
   }
 
   @override
@@ -202,3 +175,10 @@ class _DataTableViewState extends State<DataTableView> {
     _searchByIndexController.text = '';
   }
 }
+
+void showInvalidIndexSnackBar(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    content: Text('Invalid Index...'),
+  ));
+}
+

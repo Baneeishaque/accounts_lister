@@ -1,3 +1,4 @@
+import 'package:accounts_lister/src/accounts_feature/accounts_table_view.dart';
 import 'package:accounts_lister/src/data_table_feature/data_table_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -76,8 +77,10 @@ class MyApp extends StatelessWidget {
                   case SampleItemListView.routeName:
                     return const SampleItemListView();
                   case DataTableView.routName:
-                  default:
                     return const DataTableView();
+                  case AccountsTableView.routName:
+                  default:
+                    return const AccountsTableView();
                 }
               },
             );
