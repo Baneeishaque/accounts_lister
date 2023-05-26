@@ -1,0 +1,4 @@
+Flutter 3.11.0-14.0.pre.36 ΓÇó channel master ΓÇó https://github.com/flutter/flutter.git
+Framework ΓÇó revision c1558f6979 (79 minutes ago) ΓÇó 2023-05-27 01:49:37 +0800
+Engine ΓÇó revision 84f2fc16e5
+Tools ΓÇó Dart 3.1.0 (build 3.1.0-149.0.dev) ΓÇó DevTools 2.23.1
