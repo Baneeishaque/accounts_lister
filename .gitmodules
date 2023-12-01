@@ -1,0 +1,3 @@
+[submodule "account_ledger_library_dart"]
+	path = account_ledger_library_dart
+	url = https://github.com/Baneeishaque/account_ledger_library_dart.git

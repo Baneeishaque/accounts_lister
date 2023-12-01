@@ -16,6 +16,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   http: ^1.0.0
+  account_ledger_library:
+    path: account_ledger_library_dart
+  integer: ^2.0.1
 
 dev_dependencies:
   flutter_test:
