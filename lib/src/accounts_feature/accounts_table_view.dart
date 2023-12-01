@@ -4,8 +4,8 @@ import 'package:account_ledger_library/transaction_api.dart';
 import 'package:accounts_lister/src/accounts_feature/accounts_full_response.dart';
 import 'package:accounts_lister/src/accounts_feature/accounts_source.dart';
 import 'package:accounts_lister/src/data_table_feature/data_table_view.dart';
-import 'package:flutter/material.dart';
 import 'package:advanced_datatable/datatable.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:integer/integer.dart';
 
