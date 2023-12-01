@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:account_ledger_library/modals/accounts_url_with_execution_status_modal.dart';
 import 'package:account_ledger_library/transaction_api.dart';
 import 'package:accounts_lister/src/accounts_feature/accounts_full_response.dart';
 import 'package:accounts_lister/src/accounts_feature/accounts_source.dart';
@@ -7,7 +8,6 @@ import 'package:accounts_lister/src/data_table_feature/data_table_view.dart';
 import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:integer/integer.dart';
 
 class AccountsTableView extends StatefulWidget {
   const AccountsTableView({Key? key}) : super(key: key);
@@ -222,8 +222,25 @@ class _AccountsTableViewState extends State<AccountsTableView> {
   }
 
   Future<AccountsFullResponse> fetchAccountsFullResponse() async {
-    _sourceUrl ??= runAccountLedgerGetAccountsUrlOperation(u32(25));
-    final response = await http.get(Uri.parse(_sourceUrl!));
+    if (_sourceUrl == null) {
+      AccountsUrlWithExecutionStatusModal accountsUrlWithExecutionStatus =
+          runAccountLedgerGetAccountsUrlOperation();
+      if (accountsUrlWithExecutionStatus.status == 0) {
+        _sourceUrl = accountsUrlWithExecutionStatus.textData;
+        return (await executeFetchAccountsFullResponse(_sourceUrl!));
+      } else if (accountsUrlWithExecutionStatus.status == 1) {
+        throw Exception('Error: ${accountsUrlWithExecutionStatus.error}');
+      } else {
+        throw Exception(
+            'Error: Unknown Status Code ${accountsUrlWithExecutionStatus.status}');
+      }
+    }
+    return (await executeFetchAccountsFullResponse(_sourceUrl!));
+  }
+
+  Future<AccountsFullResponse> executeFetchAccountsFullResponse(
+      String url) async {
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       return AccountsFullResponse.fromJson(jsonDecode(response.body));
     } else {
