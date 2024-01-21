@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:account_ledger_library/modals/accounts_url_with_execution_status_modal.dart';
+import 'package:account_ledger_library/models/accounts_url_with_execution_status_model.dart';
 import 'package:account_ledger_library/transaction_api.dart';
 import 'package:accounts_lister/src/accounts_feature/accounts_full_response.dart';
 import 'package:accounts_lister/src/accounts_feature/accounts_source.dart';
@@ -223,7 +223,7 @@ class _AccountsTableViewState extends State<AccountsTableView> {
 
   Future<AccountsFullResponse> fetchAccountsFullResponse() async {
     if (_sourceUrl == null) {
-      AccountsUrlWithExecutionStatusModal accountsUrlWithExecutionStatus =
+      AccountsUrlWithExecutionStatusModel accountsUrlWithExecutionStatus =
           runAccountLedgerGetAccountsUrlOperation();
       if (accountsUrlWithExecutionStatus.status == 0) {
         _sourceUrl = accountsUrlWithExecutionStatus.textData;
