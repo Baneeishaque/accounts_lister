@@ -7,7 +7,7 @@ environment:
   sdk: ">=3.1.0-171.0.dev <4.0.0"
 
 dependencies:
-  advanced_datatable: ^0.0.8
+  advanced_datatable: ^0.0.9
   flutter:
     sdk: flutter
   flutter_localizations:
