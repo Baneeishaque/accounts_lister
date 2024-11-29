@@ -1,142 +1,37 @@
-variables:
-  FLUTTER_VERSION: '3.19.6'
+pool:
+  vmImage: windows-latest
 
-jobs:
-  windows-android:
-    runs-on: windows-latest
-    steps:
-      - checkout: self
-        submodules: recursive
+strategy:
+  matrix:
+    'Flutter 3.19.6':
+      version: '3.19.6'
 
-      - task: FlutterInstall@0
-        inputs:
-          mode: auto
-          channel: stable
-          version: 'custom'
-          customVersion: '$(FLUTTER_VERSION)'
+steps:
+  - checkout: self
+    submodules: recursive
 
-      # Windows Builds
-      - task: FlutterBuild@0
-        inputs:
-          target: 'windows'
-          projectDirectory: '.'
-          debugMode: true
-        displayName: 'Build (Debug) Desktop on Windows'
+  - task: FlutterInstall@0
+    inputs:
+      mode: auto
+      channel: stable
+      version: 'custom'
+      customVersion: '$(version)'
 
-      - publish: build/windows/x64/runner/Debug/accounts_lister.exe
-        artifact: Accounts Lister Windows Debug Executable
+  - task: FlutterBuild@0
+    inputs:
+      target: 'windows'
+      projectDirectory: '.'
+      debugMode: true
+    displayName: 'Build (Debug) Desktop on Windows'
 
-      - task: FlutterBuild@0
-        inputs:
-          target: 'windows'
-          projectDirectory: '.'
-        displayName: 'Build Desktop on Windows'
+  - publish: build/windows/x64/runner/Debug/accounts_lister.exe
+    artifact: Accounts Lister Windows Debug Executable
 
-      - publish: build/windows/x64/runner/Release/accounts_lister.exe
-        artifact: Accounts Lister Windows Executable
+  - task: FlutterBuild@0
+    inputs:
+      target: 'windows'
+      projectDirectory: '.'
+    displayName: 'Build Desktop on Windows'
 
-      # Android Builds
-      - task: FlutterBuild@0
-        inputs:
-          target: 'apk'
-          projectDirectory: '.'
-          debugMode: true
-        displayName: 'Build (Debug) Android APK'
-
-      - publish: build/app/outputs/flutter-apk/app-debug.apk
-        artifact: Accounts Lister Android Debug APK
-
-      - task: FlutterBuild@0
-        inputs:
-          target: 'apk'
-          projectDirectory: '.'
-        displayName: 'Build Android APK'
-
-      - publish: build/app/outputs/flutter-apk/app-release.apk
-        artifact: Accounts Lister Android APK
-
-  macos-ios:
-    runs-on: macos-latest
-    steps:
-      - checkout: self
-        submodules: recursive
-
-      - task: FlutterInstall@0
-        inputs:
-          mode: auto
-          channel: stable
-          version: 'custom'
-          customVersion: '$(FLUTTER_VERSION)'
-
-      # macOS Builds
-      - task: FlutterBuild@0
-        inputs:
-          target: 'macos'
-          projectDirectory: '.'
-          debugMode: true
-        displayName: 'Build (Debug) Desktop on macOS'
-
-      - publish: build/macos/Build/Products/Debug/accounts_lister.app
-        artifact: Accounts Lister macOS Debug App
-
-      - task: FlutterBuild@0
-        inputs:
-          target: 'macos'
-          projectDirectory: '.'
-        displayName: 'Build Desktop on macOS'
-
-      - publish: build/macos/Build/Products/Release/accounts_lister.app
-        artifact: Accounts Lister macOS App
-
-      # iOS Builds
-      - task: FlutterBuild@0
-        inputs:
-          target: 'ios'
-          projectDirectory: '.'
-          debugMode: true
-        displayName: 'Build (Debug) iOS'
-
-      - publish: build/ios/Debug-iphoneos/Runner.app
-        artifact: Accounts Lister iOS Debug App
-
-      - task: FlutterBuild@0
-        inputs:
-          target: 'ios'
-          projectDirectory: '.'
-        displayName: 'Build iOS'
-
-      - publish: build/ios/Release-iphoneos/Runner.app
-        artifact: Accounts Lister iOS App
-
-  linux:
-    runs-on: ubuntu-latest
-    steps:
-      - checkout: self
-        submodules: recursive
-
-      - task: FlutterInstall@0
-        inputs:
-          mode: auto
-          channel: stable
-          version: 'custom'
-          customVersion: '$(FLUTTER_VERSION)'
-
-      # Linux Builds
-      - task: FlutterBuild@0
-        inputs:
-          target: 'linux'
-          projectDirectory: '.'
-          debugMode: true
-        displayName: 'Build (Debug) Desktop on Linux'
-
-      - publish: build/linux/x64/debug/bundle/accounts_lister
-        artifact: Accounts Lister Linux Debug Executable
-
-      - task: FlutterBuild@0
-        inputs:
-          target: 'linux'
-          projectDirectory: '.'
-        displayName: 'Build Desktop on Linux'
-
-      - publish: build/linux/x64/release/bundle/accounts_lister
-        artifact: Accounts Lister Linux Executable
+  - publish: build/windows/x64/runner/Release/accounts_lister.exe
+    artifact: Accounts Lister Windows Executable
