@@ -22,6 +22,15 @@ steps:
       target: 'windows'
       projectDirectory: '.'
       debugMode: true
+    displayName: 'Build (Debug) Desktop on Windows'
+
+  - publish: build/windows/x64/runner/Debug/accounts_lister.exe
+    artifact: Accounts Lister Windows Debug Executable
+
+  - task: FlutterBuild@0
+    inputs:
+      target: 'windows'
+      projectDirectory: '.'
     displayName: 'Build Desktop on Windows'
 
   - publish: build/windows/x64/runner/Release/accounts_lister.exe
