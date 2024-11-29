@@ -3,23 +3,13 @@ pool:
 
 strategy:
   matrix:
-    # 'Flutter 3.22.2':
-      # version: '3.22.2'
-    # 'Flutter 3.22.1':
-      # version: '3.22.1'
-    # 'Flutter 3.22.0':
-      # version: '3.22.0'
     'Flutter 3.19.6':
       version: '3.19.6'
-    # 'Flutter 3.19.5':
-      # version: '3.19.5'
-    # 'Flutter 3.19.4':
-      # version: '3.19.4'
 
 steps:
   - checkout: self
     submodules: recursive
-    
+
   - task: FlutterInstall@0
     inputs:
       mode: auto
