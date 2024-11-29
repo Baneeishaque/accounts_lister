@@ -23,3 +23,6 @@ steps:
       projectDirectory: '.'
       debugMode: true
     displayName: 'Build Desktop on Windows'
+
+  - publish: build/windows/x64/runner/Release/accounts_lister.exe
+    artifact: Accounts Lister Windows Executable
