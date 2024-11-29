@@ -8,6 +8,7 @@ import 'package:accounts_lister/src/data_table_feature/data_table_view.dart';
 import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:tuple/tuple.dart';
 
 class AccountsTableView extends StatefulWidget {
   const AccountsTableView({Key? key}) : super(key: key);
@@ -223,16 +224,22 @@ class _AccountsTableViewState extends State<AccountsTableView> {
 
   Future<AccountsFullResponse> fetchAccountsFullResponse() async {
     if (_sourceUrl == null) {
-      AccountsUrlWithExecutionStatusModel accountsUrlWithExecutionStatus =
+      Tuple3<bool, AccountsUrlWithExecutionStatusModel?, String?>
+          accountLedgerCliOperationResult =
           runAccountLedgerGetAccountsUrlOperation();
-      if (accountsUrlWithExecutionStatus.status == 0) {
-        _sourceUrl = accountsUrlWithExecutionStatus.textData;
-        return (await executeFetchAccountsFullResponse(_sourceUrl!));
-      } else if (accountsUrlWithExecutionStatus.status == 1) {
-        throw Exception('Error: ${accountsUrlWithExecutionStatus.error}');
+      if (accountLedgerCliOperationResult.item1) {
+        if (accountLedgerCliOperationResult.item2!.status == 0) {
+          _sourceUrl = accountLedgerCliOperationResult.item2!.textData;
+          return (await executeFetchAccountsFullResponse(_sourceUrl!));
+        } else if (accountLedgerCliOperationResult.item2!.status == 1) {
+          throw Exception(
+              'Error: ${accountLedgerCliOperationResult.item2!.error}');
+        } else {
+          throw Exception(
+              'Error: Unknown Status Code ${accountLedgerCliOperationResult.item2!.status}');
+        }
       } else {
-        throw Exception(
-            'Error: Unknown Status Code ${accountsUrlWithExecutionStatus.status}');
+        throw Exception(accountLedgerCliOperationResult.item3);
       }
     }
     return (await executeFetchAccountsFullResponse(_sourceUrl!));

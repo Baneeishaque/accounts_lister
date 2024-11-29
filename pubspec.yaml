@@ -16,6 +16,7 @@ dependencies:
   account_ledger_library:
     path: account_ledger_library_dart
   integer: ^2.0.1
+  tuple: ^2.0.2
 
 dev_dependencies:
   flutter_test:
