@@ -1,0 +1,28 @@
+parameters:
+  - name: 'executable_name'
+    type: string
+    displayName: 'Executable Name'
+  - name: 'artifact_name'
+    type: string
+    displayName: 'Artifact Name'
+
+steps:
+  # Windows Builds
+  - task: FlutterBuild@0
+    inputs:
+      target: 'windows'
+      projectDirectory: '.'
+      debugMode: true
+    displayName: 'Build (Debug) Desktop on Windows'
+
+  - publish: build/windows/x64/runner/Debug/${{ parameters.executable_name }}.exe
+    artifact: ${{ parameters.artifact_name }} Windows Debug Executable
+
+  - task: FlutterBuild@0
+    inputs:
+      target: 'windows'
+      projectDirectory: '.'
+    displayName: 'Build Desktop on Windows'
+
+  - publish: build/windows/x64/runner/Release/${{ parameters.executable_name }}.exe
+    artifact: ${{ parameters.artifact_name }} Windows Executable

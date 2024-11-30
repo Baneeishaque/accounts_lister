@@ -1,0 +1,28 @@
+parameters:
+  - name: 'executable_name'
+    type: string
+    displayName: 'Executable Name'
+  - name: 'artifact_name'
+    type: string
+    displayName: 'Artifact Name'
+
+steps:
+  # Linux Builds
+  - task: FlutterBuild@0
+    inputs:
+      target: 'linux'
+      projectDirectory: '.'
+      debugMode: true
+    displayName: 'Build (Debug) Desktop on Linux'
+
+  - publish: build/linux/x64/debug/bundle/${{ parameters.executable_name }}
+    artifact: ${{ parameters.artifact_name }} Linux Debug Executable
+
+  - task: FlutterBuild@0
+    inputs:
+      target: 'linux'
+      projectDirectory: '.'
+    displayName: 'Build Desktop on Linux'
+
+  - publish: build/linux/x64/release/bundle/${{ parameters.executable_name }}
+    artifact: ${{ parameters.artifact_name }} Linux Executable

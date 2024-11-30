@@ -1,0 +1,28 @@
+parameters:
+  - name: 'executable_name'
+    type: string
+    displayName: 'Executable Name'
+  - name: 'artifact_name'
+    type: string
+    displayName: 'Artifact Name'
+
+steps:
+  # macOS Builds
+  - task: FlutterBuild@0
+    inputs:
+      target: 'macos'
+      projectDirectory: '.'
+      debugMode: true
+    displayName: 'Build (Debug) Desktop on macOS'
+
+  - publish: build/macos/Build/Products/Debug/${{ parameters.executable_name }}.app
+    artifact: ${{ parameters.artifact_name }} macOS Debug App
+
+  - task: FlutterBuild@0
+    inputs:
+      target: 'macos'
+      projectDirectory: '.'
+    displayName: 'Build Desktop on macOS'
+
+  - publish: build/macos/Build/Products/Release/${{ parameters.executable_name }}.app
+    artifact: ${{ parameters.artifact_name }} macOS App

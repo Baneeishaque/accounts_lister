@@ -1,0 +1,25 @@
+parameters:
+  - name: 'artifact_name'
+    type: string
+    displayName: 'Artifact Name'
+
+steps:
+  # Android Builds
+  - task: FlutterBuild@0
+    inputs:
+      target: 'apk'
+      projectDirectory: '.'
+      debugMode: true
+    displayName: 'Build (Debug) Android APK'
+
+  - publish: build/app/outputs/flutter-apk/app-debug.apk
+    artifact: ${{ parameters.artifact_name }} Android Debug APK
+
+  - task: FlutterBuild@0
+    inputs:
+      target: 'apk'
+      projectDirectory: '.'
+    displayName: 'Build Android APK'
+
+  - publish: build/app/outputs/flutter-apk/app-release.apk
+    artifact: ${{ parameters.artifact_name }} Android APK

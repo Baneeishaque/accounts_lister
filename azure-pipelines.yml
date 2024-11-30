@@ -1,37 +1,55 @@
-pool:
-  vmImage: windows-latest
+variables:
+  executable_name: 'accounts_lister'
+  artifact_name: 'Accounts Lister'
 
-strategy:
-  matrix:
-    'Flutter 3.19.6':
-      version: '3.19.6'
+stages:
+  - stage: 'WindowsAndroidStage'
+    displayName: 'Windows & Android Build Stage'
+    pool:
+      vmImage: 'windows-latest'
+    jobs:
+      - job: 'WindowsAndroidJob'
+        displayName: 'Windows & Android Build Job'
+        steps:
+          - template: AzurePipelineTemplates/recursive-submodule-checkout.yml
+          - template: AzurePipelineTemplates/flutter_install.yml
+          - template: AzurePipelineTemplates/build_windows.yml
+            parameters:
+              executable_name: $(executable_name)
+              artifact_name: $(artifact_name)
+          - template: AzurePipelineTemplates/build_android.yml
+            parameters:
+              artifact_name: $(artifact_name)
 
-steps:
-  - checkout: self
-    submodules: recursive
+  - stage: 'macOSiOSStage'
+    displayName: 'macOS & iOS Build Stage'
+    pool:
+      vmImage: 'macos-latest'
+    jobs:
+      - job: 'macOSiOSJob'
+        displayName: 'macOS & iOS Build Job'
+        steps:
+          - template: AzurePipelineTemplates/recursive-submodule-checkout.yml
+          - template: AzurePipelineTemplates/flutter_install.yml
+          - template: AzurePipelineTemplates/build_macos.yml
+            parameters:
+              executable_name: $(executable_name)
+              artifact_name: $(artifact_name)
+          - template: AzurePipelineTemplates/build_ios.yml
+            parameters:
+              artifact_name: $(artifact_name)
 
-  - task: FlutterInstall@0
-    inputs:
-      mode: auto
-      channel: stable
-      version: 'custom'
-      customVersion: '$(version)'
-
-  - task: FlutterBuild@0
-    inputs:
-      target: 'windows'
-      projectDirectory: '.'
-      debugMode: true
-    displayName: 'Build (Debug) Desktop on Windows'
-
-  - publish: build/windows/x64/runner/Debug/accounts_lister.exe
-    artifact: Accounts Lister Windows Debug Executable
-
-  - task: FlutterBuild@0
-    inputs:
-      target: 'windows'
-      projectDirectory: '.'
-    displayName: 'Build Desktop on Windows'
-
-  - publish: build/windows/x64/runner/Release/accounts_lister.exe
-    artifact: Accounts Lister Windows Executable
+  - stage: 'LinuxStage'
+    displayName: 'Linux Build Stage'
+    pool:
+      vmImage: 'ubuntu-latest'
+    jobs:
+      - job: 'LinuxJob'
+        displayName: 'Linux Build Job'
+        steps:
+          - template: AzurePipelineTemplates/recursive-submodule-checkout.yml
+          - template: AzurePipelineTemplates/flutter_install.yml
+          - template: AzurePipelineTemplates/build_linux.yml
+            parameters:
+              executable_name: $(executable_name)
+              artifact_name: $(artifact_name)

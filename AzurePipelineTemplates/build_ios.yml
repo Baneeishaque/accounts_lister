@@ -1,0 +1,25 @@
+parameters:
+  - name: 'artifact_name'
+    type: string
+    displayName: 'Artifact Name'
+
+steps:
+  # iOS Builds
+  - task: FlutterBuild@0
+    inputs:
+      target: 'ios'
+      projectDirectory: '.'
+      debugMode: true
+    displayName: 'Build (Debug) iOS'
+
+  - publish: build/ios/Debug-iphoneos/Runner.app
+    artifact: ${{ parameters.artifact_name }} iOS Debug App
+
+  - task: FlutterBuild@0
+    inputs:
+      target: 'ios'
+      projectDirectory: '.'
+    displayName: 'Build iOS'
+
+  - publish: build/ios/Release-iphoneos/Runner.app
+    artifact: ${{ parameters.artifact_name }} iOS App
